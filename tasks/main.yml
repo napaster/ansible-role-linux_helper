@@ -61,6 +61,13 @@
   when:
     - "lookup('ansible.builtin.vars', 'linux_helper_sudoers_settings',
       default='') not in ['', [], '[]', None]"
+- name: "linux_helper | Include deploy logrotate tasks"
+  ansible.builtin.include_tasks:
+    file: "deploy_logrotate.yml"
+  when:
+    - "lookup('ansible.builtin.vars', 'linux_helper_logrotate_settings',
+      default='') | bool"
+
 - name: "linux_helper | Include netconsole tasks"
   ansible.builtin.include_tasks:
     file: "deploy.d/netconsole/main.yml"

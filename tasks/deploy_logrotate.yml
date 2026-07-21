@@ -1,0 +1,26 @@
+---
+- name: "linux_helper | logrotate | Install packages"
+  ansible.builtin.package:
+    name: "{{ ['logrotate'] + linux_helper_logrotate_extra_packages }}"
+    state: present
+
+- name: "linux_helper | logrotate | Deploy /etc/logrotate.conf"
+  ansible.builtin.template:
+    src: "logrotate.conf.j2"
+    dest: "/etc/logrotate.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "linux_helper | logrotate | Check if logrotate.timer unit exists"
+  ansible.builtin.stat:
+    path: "/usr/lib/systemd/system/logrotate.timer"
+  register: linux_helper_logrotate_timer_unit
+
+- name: "linux_helper | logrotate | Enable + start logrotate.timer (systemd)"
+  ansible.builtin.systemd:
+    name: "logrotate.timer"
+    enabled: true
+    state: "started"
+    daemon_reload: true
+  when: linux_helper_logrotate_timer_unit.stat.exists

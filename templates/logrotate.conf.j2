@@ -1,0 +1,27 @@
+{{ '# ' + ansible_managed }}
+# Global logrotate defaults. Per-package configs — /etc/logrotate.d/*.
+
+{{ linux_helper_logrotate_frequency }}
+rotate {{ linux_helper_logrotate_rotate }}
+create
+{% if linux_helper_logrotate_missingok %}
+missingok
+{% endif %}
+{% if linux_helper_logrotate_notifempty %}
+notifempty
+{% endif %}
+{% if linux_helper_logrotate_compress %}
+compress
+compresscmd {{ linux_helper_logrotate_compresscmd }}
+compressext {{ linux_helper_logrotate_compressext }}
+compressoptions {{ linux_helper_logrotate_compressoptions }}
+uncompresscmd {{ linux_helper_logrotate_uncompresscmd }}
+{% endif %}
+{% if linux_helper_logrotate_delaycompress %}
+delaycompress
+{% endif %}
+{% for line in linux_helper_logrotate_extra_directives %}
+{{ line }}
+{% endfor %}
+
+include /etc/logrotate.d

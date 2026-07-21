@@ -4,10 +4,13 @@
 
 {{ '127.0.0.1' + ' ' + 'localhost' }}
 {{ '::1' + ' ' + 'localhost' }}
-{% for h in vars['linux_helper_hosts_settings']['hosts'] %}
-{% if h['address'] is defined and h['address'] | ansible.utils.ipaddr('host') %}
-{% if h['aliases'] is defined and h['aliases'] != '' %}
-{{ h['address'] + ' ' + h['aliases'] | join(' ') }}
+{% for h in lookup('ansible.builtin.vars',
+  'linux_helper_hosts_settings')['hosts'] %}
+{% if (h['address'] is defined and h['address']
+  not in ['', [], '[]', None]) and ((h['address'] |
+  ansible.utils.ipaddr('host')) is ansible.utils.ip()) %}
+{% if h['aliases'] is defined and h['aliases'] not in ['', [], '[]', None] %}
+{{ h['address'] + ' ' + (h['aliases'] | join(' ')) }}
 {% endif %}
 {% endif %}
 {% endfor %}

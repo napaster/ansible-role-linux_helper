@@ -1,2 +1,24 @@
 ---
 linux_helper: []
+
+# ============================================================================
+# logrotate defaults — включается через linux_helper_logrotate_settings=true
+# в host_vars или group_vars. Управляет /etc/logrotate.conf (глобальные
+# defaults). Per-application configs в /etc/logrotate.d/* ставятся своими
+# пакетами (nginx, samba и т.п.) и не трогаются.
+# ============================================================================
+linux_helper_logrotate_frequency: "daily"        # daily | weekly | monthly
+linux_helper_logrotate_rotate: 14                # сколько ротаций хранить
+linux_helper_logrotate_compress: true            # включить compress
+linux_helper_logrotate_compresscmd: "/usr/bin/zstd"
+linux_helper_logrotate_compressext: ".zst"
+linux_helper_logrotate_compressoptions: "-T0 --long"
+linux_helper_logrotate_uncompresscmd: "/usr/bin/unzstd"
+linux_helper_logrotate_delaycompress: true
+linux_helper_logrotate_missingok: true
+linux_helper_logrotate_notifempty: true
+# Extra opaque строки для /etc/logrotate.conf (например `dateext`, `maxsize 100M`).
+# Каждая строка идёт в файл as-is.
+linux_helper_logrotate_extra_directives: []
+# Дополнительные пакеты (zstd в Arch base, в Debian нужен явно).
+linux_helper_logrotate_extra_packages: ["zstd"]

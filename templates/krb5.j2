@@ -2,8 +2,9 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for k in vars['linux_helper_krb5_settings'] %}
-{% if k['libdefaults'] is defined and k['libdefaults'] != '' %}
+{% for k in lookup('ansible.builtin.vars', 'linux_helper_krb5_settings') %}
+{% if k['libdefaults'] is defined and k['libdefaults']
+  not in ['', [], '[]', None] %}
 {% for kl in k['libdefaults'] %}
 {% if loop.first %}
 {{ '[libdefaults]' }}
@@ -16,40 +17,44 @@
   'false'] %}
 {{ 'canonicalize = ' + kl['canonicalize'] }}
 {% endif %}
-{% if kl['ccache_type'] is defined and kl['ccache_type'] != '' %}
+{% if kl['ccache_type'] is defined and kl['ccache_type']
+  not in ['', [], '[]', None] %}
 {{ 'ccache_type = ' ~ kl['ccache_type'] }}
 {% endif %}
-{% if kl['clockskew'] is defined and kl['clockskew'] != '' %}
+{% if kl['clockskew'] is defined and kl['clockskew']
+  not in ['', [], '[]', None] %}
 {{ 'clockskew = ' ~ kl['clockskew'] }}
 {% endif %}
 {% if kl['default_ccache_name'] is defined and
-  kl['default_ccache_name'] != '' %}
+  kl['default_ccache_name'] not in ['', [], '[]', None] %}
 {{ 'default_ccache_name = ' + kl['default_ccache_name'] }}
 {% endif %}
 {% if kl['default_client_keytab_name'] is defined and
-  kl['default_client_keytab_name'] != '' %}
+  kl['default_client_keytab_name'] not in ['', [], '[]', None] %}
 {{ 'default_client_keytab_name = ' + kl['default_client_keytab_name'] }}
 {% endif %}
 {% if kl['default_rcache_name'] is defined and
-  kl['default_rcache_name'] != '' %}
+  kl['default_rcache_name'] not in ['', [], '[]', None] %}
 {{ 'default_rcache_name = ' + kl['default_rcache_name'] }}
 {% endif %}
-{% if kl['default_realm'] is defined and kl['default_realm'] != '' %}
+{% if kl['default_realm'] is defined and kl['default_realm']
+  not in ['', [], '[]', None] %}
 {{ 'default_realm = ' + kl['default_realm'] }}
 {% endif %}
 {% if kl['default_tgs_enctypes'] is defined and
-  kl['default_tgs_enctypes'] != '' %}
+  kl['default_tgs_enctypes'] not in ['', [], '[]', None] %}
 {{ 'default_tgs_enctypes = ' + kl['default_tgs_enctypes'] }}
 {% endif %}
 {% if kl['default_tkt_enctypes'] is defined and
-  kl['default_tkt_enctypes'] != '' %}
+  kl['default_tkt_enctypes'] not in ['', [], '[]', None] %}
 {{ 'default_tkt_enctypes = ' + kl['default_tkt_enctypes'] }}
 {% endif %}
 {% if kl['dns_canonicalize_hostname'] is defined and
-  kl['dns_canonicalize_hostname'] != '' %}
+  kl['dns_canonicalize_hostname'] not in ['', [], '[]', None] %}
 {{ 'dns_canonicalize_hostname = ' + kl['dns_canonicalize_hostname'] }}
 {% endif %}
-{% if kl['dns_lookup_kdc'] is defined and kl['dns_lookup_kdc'] != '' %}
+{% if kl['dns_lookup_kdc'] is defined and kl['dns_lookup_kdc']
+  not in ['', [], '[]', None] %}
 {{ 'dns_lookup_kdc = ' + kl['dns_lookup_kdc'] }}
 {% endif %}
 {% if kl['dns_lookup_realm'] is defined and kl['dns_lookup_realm'] in ['true',
@@ -64,37 +69,42 @@
   kl['enforce_ok_as_delegate'] in ['true', 'false'] %}
 {{ 'enforce_ok_as_delegate = ' + kl['enforce_ok_as_delegate'] }}
 {% endif %}
-{% if kl['err_fmt'] is defined and kl['err_fmt'] != '' %}
+{% if kl['err_fmt'] is defined and kl['err_fmt'] not in ['', [], '[]', None] %}
 {{ 'err_fmt = ' + kl['err_fmt'] }}
 {% endif %}
-{% if kl['extra_addresses'] is defined and kl['extra_addresses'] != '' %}
+{% if kl['extra_addresses'] is defined and kl['extra_addresses']
+  not in ['', [], '[]', None] %}
 {{ 'extra_addresses = ' + kl['extra_addresses'] }}
 {% endif %}
 {% if kl['forwardable'] is defined and kl['forwardable'] in ['true', 'false'] %}
 {{ 'forwardable = ' + kl['forwardable'] }}
 {% endif %}
 {% if kl['ignore_acceptor_hostname'] is defined and
-    kl['ignore_acceptor_hostname'] in ['true', 'false'] %}
+  kl['ignore_acceptor_hostname'] in ['true', 'false'] %}
 {{ 'ignore_acceptor_hostname = ' + kl['ignore_acceptor_hostname'] }}
 {% endif %}
 {% if kl['k5login_authoritative'] is defined and
-    kl['k5login_authoritative'] in ['true', 'false'] %}
+  kl['k5login_authoritative'] in ['true', 'false'] %}
 {{ 'k5login_authoritative = ' + kl['k5login_authoritative'] }}
 {% endif %}
-{% if kl['k5login_directory'] is defined and kl['k5login_directory'] != '' %}
+{% if kl['k5login_directory'] is defined and kl['k5login_directory']
+  not in ['', [], '[]', None] %}
 {{ 'k5login_directory = ' + kl['k5login_directory'] }}
 {% endif %}
-{% if kl['k5login_directory'] is defined and kl['k5login_directory'] != '' %}
+{% if kl['k5login_directory'] is defined and kl['k5login_directory']
+  not in ['', [], '[]', None] %}
 {{ 'k5login_directory = ' + kl['k5login_directory'] }}
 {% endif %}
-{% if kl['kcm_mach_service'] is defined and kl['kcm_mach_service'] != '' %}
+{% if kl['kcm_mach_service'] is defined and kl['kcm_mach_service']
+  not in ['', [], '[]', None] %}
 {{ 'kcm_mach_service = ' + kl['kcm_mach_service'] }}
 {% endif %}
-{% if kl['kcm_socket'] is defined and kl['kcm_socket'] != '' %}
+{% if kl['kcm_socket'] is defined and kl['kcm_socket']
+  not in ['', [], '[]', None] %}
 {{ 'kcm_socket = ' + kl['kcm_socket'] }}
 {% endif %}
 {% if kl['kdc_default_options'] is defined and
-  kl['kdc_default_options'] != '' %}
+  kl['kdc_default_options'] not in ['', [], '[]', None] %}
 {{ 'kdc_default_options = ' + kl['kdc_default_options'] }}
 {% endif %}
 {% if kl['kdc_timesync'] is defined and kl['kdc_timesync'] in ['0', '1'] %}
@@ -103,43 +113,48 @@
 {% if kl['noaddresses'] is defined and kl['noaddresses'] in ['true', 'false'] %}
 {{ 'noaddresses = ' + kl['noaddresses'] }}
 {% endif %}
-{% if kl['permitted_enctypes'] is defined and kl['permitted_enctypes'] != '' %}
+{% if kl['permitted_enctypes'] is defined and kl['permitted_enctypes']
+  not in ['', [], '[]', None] %}
 {{ 'permitted_enctypes = ' + kl['permitted_enctypes'] }}
 {% endif %}
-{% if kl['plugin_base_dir'] is defined and kl['plugin_base_dir'] != '' %}
+{% if kl['plugin_base_dir'] is defined and kl['plugin_base_dir']
+  not in ['', [], '[]', None] %}
 {{ 'plugin_base_dir = ' + kl['plugin_base_dir'] }}
 {% endif %}
 {% if kl['preferred_preauth_types'] is defined and
-  kl['preferred_preauth_types'] != '' %}
+  kl['preferred_preauth_types'] not in ['', [], '[]', None] %}
 {{ 'preferred_preauth_types = ' + kl['preferred_preauth_types'] }}
 {% endif %}
 {% if kl['proxiable'] is defined and kl['proxiable'] in ['true', 'false'] %}
 {{ 'proxiable = ' + kl['proxiable'] }}
 {% endif %}
 {% if kl['qualify_shortname'] is defined and
-  kl['qualify_shortname'] != '' %}
+  kl['qualify_shortname'] not in ['', [], '[]', None] %}
 {{ 'qualify_shortname = ' + kl['qualify_shortname'] }}
 {% endif %}
 {% if kl['rdns'] is defined and kl['rdns'] in ['true', 'false'] %}
 {{ 'rdns = ' + kl['rdns'] }}
 {% endif %}
-{% if (kl['realm_try_domains'] is defined and kl['realm_try_domains'] != '') and
-  (kl['realm_try_domains'] | int() >= -1 and kl['realm_try_domains'] |
-  int() <= 1) %}
+{% if (kl['realm_try_domains'] is defined and kl['realm_try_domains']
+  not in ['', [], '[]', None]) and
+  ((kl['realm_try_domains'] | int() >= -1) and
+  (kl['realm_try_domains'] |int() <= 1)) %}
 {{ 'realm_try_domains = ' ~ kl['realm_try_domains'] }}
 {% endif %}
-{% if kl['renew_lifetime'] is defined and kl['renew_lifetime'] != '' %}
+{% if kl['renew_lifetime'] is defined and kl['renew_lifetime']
+  not in ['', [], '[]', None] %}
 {{ 'renew_lifetime = ' ~ kl['renew_lifetime'] }}
 {% endif %}
 {% if kl['spake_preauth_groups'] is defined and
-  kl['spake_preauth_groups'] != '' %}
+  kl['spake_preauth_groups'] not in ['', [], '[]', None] %}
 {{ 'spake_preauth_groups = ' + kl['spake_preauth_groups'] }}
 {% endif %}
-{% if kl['ticket_lifetime'] is defined and kl['ticket_lifetime'] != '' %}
+{% if kl['ticket_lifetime'] is defined and kl['ticket_lifetime']
+  not in ['', [], '[]', None] %}
 {{ 'ticket_lifetime = ' ~ kl['ticket_lifetime'] }}
 {% endif %}
 {% if kl['udp_preference_limit'] is defined and
-  kl['udp_preference_limit'] != '' %}
+  kl['udp_preference_limit'] not in ['', [], '[]', None] %}
 {{ 'udp_preference_limit = ' ~ kl['udp_preference_limit'] }}
 {% endif %}
 {% if kl['verify_ap_req_nofail'] is defined and
@@ -152,17 +167,19 @@
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if k['realms'] is defined and k['realms'] != '' %}
+{% if k['realms'] is defined and k['realms'] not in ['', [], '[]', None] %}
 {% for kr in k['realms'] %}
-{% if loop.first %}
+{% if loop['first'] %}
 {{ '[realms]' }}
 {% endif %}
-{% if h['name'] is defined and h['name'] != '' %}
+{% if h['name'] is defined and h['name'] not in ['', [], '[]', None] %}
 {{ h['name'] + ' = {' }}
-{% if h['admin_server'] is defined and h['admin_server'] != '' %}
+{% if h['admin_server'] is defined and h['admin_server']
+  not in ['', [], '[]', None] %}
 {{ '  admin_server = ' + h['admin_server'] }}
 {% endif %}
-{% if h['auth_to_local'] is defined and h['auth_to_local'] != '' %}
+{% if h['auth_to_local'] is defined and h['auth_to_local']
+  not in ['', [], '[]', None] %}
 {% if h['auth_to_local'] is string %}
 {{ '  auth_to_local = ' + h['admin_server'] }}
 {% elif h['auth_to_local'] is sequence %}
@@ -171,35 +188,42 @@
 {% endfor %}
 {% endif %}
 {% endif %}
-{% if h['auth_to_local_names'] is defined and h['auth_to_local_names'] != '' %}
+{% if h['auth_to_local_names'] is defined and h['auth_to_local_names']
+  not in ['', [], '[]', None] %}
 {{ '  auth_to_local_names = ' + h['auth_to_local_names'] }}
 {% endif %}
-{% if h['default_domain'] is defined and h['default_domain'] != '' %}
+{% if h['default_domain'] is defined and h['default_domain']
+  not in ['', [], '[]', None] %}
 {{ '  default_domain = ' + h['default_domain'] }}
 {% endif %}
 {% if h['disable_encrypted_timestamp'] is defined and
   h['disable_encrypted_timestamp'] in ['true', 'false'] %}
 {{ '  disable_encrypted_timestamp = ' + h['disable_encrypted_timestamp'] }}
 {% endif %}
-{% if h['http_anchors'] is defined and h['http_anchors'] != '' %}
+{% if h['http_anchors'] is defined and h['http_anchors']
+  not in ['', [], '[]', None] %}
 {{ '  http_anchors = ' + h['http_anchors'] }}
 {% endif %}
-{% if h['kdc'] is defined and h['kdc'] != '' %}
+{% if h['kdc'] is defined and h['kdc'] not in ['', [], '[]', None] %}
 {{ '  kdc = ' + h['kdc'] }}
 {% endif %}
-{% if h['kpasswd_server'] is defined and h['kpasswd_server'] != '' %}
+{% if h['kpasswd_server'] is defined and h['kpasswd_server']
+  not in ['', [], '[]', None] %}
 {{ '  kpasswd_server = ' + h['kpasswd_server'] }}
 {% endif %}
-{% if h['master_kdc'] is defined and h['master_kdc'] != '' %}
+{% if h['master_kdc'] is defined and h['master_kdc']
+  not in ['', [], '[]', None] %}
 {{ '  master_kdc = ' + h['master_kdc'] }}
 {% endif %}
-{% if h['primary_kdc'] is defined and h['primary_kdc'] != '' %}
+{% if h['primary_kdc'] is defined and h['primary_kdc']
+  not in ['', [], '[]', None] %}
 {{ '  primary_kdc = ' + h['primary_kdc'] }}
 {% endif %}
-{% if h['v4_instance_convert'] is defined and h['v4_instance_convert'] != '' %}
+{% if h['v4_instance_convert'] is defined and h['v4_instance_convert']
+  not in ['', [], '[]', None] %}
 {{ '  v4_instance_convert = ' + h['v4_instance_convert'] }}
 {% endif %}
-{% if h['v4_realm'] is defined and h['v4_realm'] != '' %}
+{% if h['v4_realm'] is defined and h['v4_realm'] not in ['', [], '[]', None] %}
 {{ '  v4_realm = ' + h['v4_realm'] }}
 {% endif %}
 {{ '}' }}

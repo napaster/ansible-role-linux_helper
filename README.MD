@@ -53,7 +53,20 @@ linux_helper:
             charset: 'UTF-8'
           - locale: 'en_US'
             charset: 'UTF-8'
-    krb5: "{{ linux_helper_krb5 | default('[]') }}"
+# IMPORTANT for RedHat systems, you should add `lang` field, that match with your locale package. This required for package manager:
+        locales:
+          - lang: 'ru'
+            locale: 'ru_RU'
+            charset: 'UTF-8'
+          - lang: 'en'
+            locale: 'en_US'
+            charset: 'UTF-8'
+    krb5:
+      - libdefaults:
+          - default_realm: 'EXAMPLE.COM'
+            dns_lookup_realm: 'false'
+            dns_lookup_kdc: 'true'
+            udp_preference_limit: '0'
 # Static table lookup for hostnames
     hosts:
       - set_hosts: "{{ linux_helper_set_hosts | default('true') }}"
@@ -68,8 +81,7 @@ linux_helper:
     sudoers:
       - 'root ALL=(ALL) ALL'
       - '%wheel ALL=(ALL) NOPASSWD: ALL'
-# netconsole deployment: only for RedHat & Debian via package install with
-# systemd service
+# netconsole deployment with systemd service
     netconsole:
       - set_netconsole: 'true'
         netconsole:

@@ -2,16 +2,20 @@
 - name: "linux_helper | Deploy modprobe.d conf files"
   ansible.builtin.template:
     src: "modprobe.j2"
-    dest: "{{ '/etc/modprobe.d/' ~ vars['outer_item'] ~ '.conf' }}"
+    dest: "{{ '/etc/modprobe.d/' ~ lookup('ansible.builtin.vars',
+      'outer_item') ~ '.conf' }}"
     group: "root"
     owner: "root"
     mode: "0644"
     force: "yes"
-  loop: "{{ hostvars[inventory_hostname]['linux_helper'] |
+  loop: "{{ (hostvars[inventory_hostname]['linux_helper'] |
     community.general.json_query(\"[].modprobe[].modprobes\" ~
-    \"[?file_name=='\" ~ vars['outer_item'] ~ \"']\") | flatten(levels=1) }}"
+    \"[?file_name=='\" ~ lookup('ansible.builtin.vars',
+    'outer_item') ~ \"']\")) | flatten(levels=1) }}"
   loop_control:
-    label: "{{ 'Deploy modprobe file: ' ~ item['file_name'] }}"
+    loop_var: "linux_helper_modprobes_deploy"
+    label: "{{ 'Deploy modprobe file: ' ~ lookup('ansible.builtin.vars',
+      'outer_item') }}"
   notify:
     # https://access.redhat.com/discussions/1519283
     - "Run dracut"

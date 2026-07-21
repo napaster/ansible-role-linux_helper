@@ -1,0 +1,31 @@
+---
+- name: "linux_helper | Deploy locales"
+  community.general.locale_gen:
+    name: "{{ linux_helper_locale_gen_locales['locale'] + '.' +
+      linux_helper_locale_gen_locales['charset'] }}"
+    state: "present"
+  loop: "{{ lookup('ansible.builtin.vars', 'linux_helper_locale_settings') |
+    flatten(levels=1) }}"
+  loop_control:
+    loop_var: "linux_helper_locale_gen_locales"
+    label: "{{ 'Deploy locale: ' +
+      linux_helper_locale_gen_locales['locale'] }}"
+  when:
+    - "hostvars[inventory_hostname]['ansible_facts']['os_family'] in ('Debian',
+      'Archlinux')"
+- name: "linux_helper | Deploy locale.conf"
+  ansible.builtin.template:
+    src: "locale_conf.j2"
+    dest: "/etc/locale.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    force: "yes"
+  when:
+    - "hostvars[inventory_hostname]['linux_helper'] is defined"
+    - "hostvars[inventory_hostname]['linux_helper'] not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['linux_helper'] |
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'linux_helper_set_langs', default='')) == 'true'"
+  vars:
+    linux_helper_set_langs: "[].locale[] | map(&set_langs || 'false', @) | [0]"

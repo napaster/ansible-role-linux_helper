@@ -1,1 +1,3 @@
 ---
+linux_helper_netconsole_dest: '/etc/sysconfig'
+linux_helper_netconsole_package: 'netconsole'

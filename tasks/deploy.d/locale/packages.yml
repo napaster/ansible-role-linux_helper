@@ -1,0 +1,18 @@
+---
+- name: "linux_helper | Install the locale packages for RedHat"
+  when:
+    - "hostvars[inventory_hostname]['ansible_facts']['os_family'] == 'RedHat'"
+  block:
+    - name: "linux_helper | Update dnf cache"
+      ansible.builtin.dnf:
+        update_cache: "yes"
+    - name: "linux_helper | Install langpack packages"
+      ansible.builtin.dnf:
+        name: "{{ linux_helper_locale_langpacks }}"
+        state: "present"
+      vars:
+        linux_helper_locale_langpacks: "{{ lookup('ansible.builtin.vars',
+          'linux_helper_locale_langs', default=[]) |
+          map('regex_replace', '^(.*)$', 'langpacks-\\1') | list() }}"
+      when:
+        - "linux_helper_locale_langpacks not in ['', [], '[]', None]"

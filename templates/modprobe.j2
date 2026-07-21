@@ -1,8 +1,8 @@
-{{ '## ' ~ item['file_name'] ~ '.conf' }}
+{{ '## ' ~ lookup('ansible.builtin.vars', 'outer_item') ~ '.conf' }}
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for a in item['actions'] %}
+{% for a in linux_helper_modprobes_deploy['actions'] %}
 {% if a['action'] is defined and a['action'] != '' %}
 {% if a['action'] == 'alias' %}
 {% if (a['wildcard'] is defined and a['wildcard'] != '') and (a['module'] is

@@ -1,18 +1,21 @@
 ---
-- name: "Daemon reload"
+- name: "linux_helper | Reload systemd daemons"
   ansible.builtin.systemd:
     daemon_reload: "yes"
-- name: "Restart netconsole"
+  listen: "Daemon reload"
+- name: "linux_helper | Restart netconsole service"
   ansible.builtin.systemd:
     name: "netconsole"
     state: "restarted"
+  listen: "Restart netconsole"
   register: "linux_helper_netconsole_restart_result"
   ignore_errors: true
-- name: "Run dracut"
+- name: "linux_helper | Run dracut regenerate force"
   ansible.builtin.command:
     cmd: "dracut --regenerate-all --force"
-  register: "dracut_regenerate_result"
-  changed_when: "dracut_regenerate_result['rc'] == 0"
-  failed_when: "dracut_regenerate_result['rc'] != 0"
+  listen: "Run dracut"
+  register: "linux_helper_dracut_regenerate_result"
+  changed_when: "linux_helper_dracut_regenerate_result['rc'] == 0"
+  failed_when: "linux_helper_dracut_regenerate_result['rc'] != 0"
   when:
-    - "hostvars[inventory_hostname]['ansible_os_family'] == 'RedHat'"
+    - "hostvars[inventory_hostname]['ansible_facts']['os_family'] == 'RedHat'"

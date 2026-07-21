@@ -1,32 +1,30 @@
 ---
-
 - name: "linux_helper | Include prereq tasks"
   ansible.builtin.import_tasks:
     file: "pre_requisite.yml"
-- name: "linux_helper | Include deploy locale tasks"
+- name: "linux_helper | Include locale tasks"
   ansible.builtin.include_tasks:
-    file: "deploy_locale.yml"
+    file: "deploy.d/locale/main.yml"
   when:
-    - "vars['linux_helper_locale_settings']['locales'] is defined"
-    - "vars['linux_helper_locale_settings']['locales'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_locale_settings',
+      default='') not in ['', [], '[]', None]"
 - name: "linux_helper | Include deploy profile tasks"
   ansible.builtin.include_tasks:
     file: "deploy_profile.yml"
   when:
-    - "vars['linux_helper_profile_settings'] is defined"
-    - "vars['linux_helper_profile_settings'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_profile_settings',
+      default='') not in ['', [], '[]', None]"
 - name: "linux_helper | Include deploy hostname tasks"
   ansible.builtin.include_tasks:
     file: "deploy_hostname.yml"
   when:
-    - "vars['linux_helper_hostname_settings'] is defined"
-    - "vars['linux_helper_hostname_settings'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_hostname_settings',
+      default='') not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['linux_helper'] is defined"
+    - "hostvars[inventory_hostname]['linux_helper'] not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_hostname']) is
-       defined"
-    - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_hostname']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'linux_helper_set_hostname', default='')) == 'true'"
   vars:
     linux_helper_set_hostname: "[].hostname[] |
       map(&set_hostname || 'false', @) | [0]"
@@ -34,28 +32,26 @@
   ansible.builtin.include_tasks:
     file: "deploy_hosts.yml"
   when:
-    - "vars['linux_helper_hosts_settings'] is defined"
-    - "vars['linux_helper_hosts_settings'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_hosts_settings',
+      default='') not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['linux_helper'] is defined"
+    - "hostvars[inventory_hostname]['linux_helper'] not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_hosts']) is
-       defined"
-    - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_hosts']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'linux_helper_set_hosts', default='')) == 'true'"
   vars:
     linux_helper_set_hosts: "[].hosts[] | map(&set_hosts || 'false', @) | [0]"
 - name: "linux_helper | Include modprobe executor"
   ansible.builtin.include_tasks:
     file: "modprobe_executor.yml"
   when:
-    - "vars['linux_helper_modprobe_files'] is defined"
-    - "vars['linux_helper_modprobe_files'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_modprobe_files',
+      default='') not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['linux_helper'] is defined"
+    - "hostvars[inventory_hostname]['linux_helper'] not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_modprobe']) is
-       defined"
-    - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_modprobe']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'linux_helper_set_modprobe', default='')) == 'true'"
   vars:
     linux_helper_set_modprobe: "[].modprobe[] |
       map(&set_modprobe || 'false', @) | [0]"
@@ -63,20 +59,26 @@
   ansible.builtin.include_tasks:
     file: "deploy_sudoers.yml"
   when:
-    - "vars['linux_helper_sudoers_settings'] is defined"
-    - "vars['linux_helper_sudoers_settings'] != []"
-- name: "linux_helper | Include deploy netconsole tasks"
+    - "lookup('ansible.builtin.vars', 'linux_helper_sudoers_settings',
+      default='') not in ['', [], '[]', None]"
+- name: "linux_helper | Include deploy logrotate tasks"
   ansible.builtin.include_tasks:
-    file: "deploy_netconsole.yml"
+    file: "deploy_logrotate.yml"
   when:
-    - "vars['linux_helper_netconsole_settings'] is defined"
-    - "vars['linux_helper_netconsole_settings'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_logrotate_settings',
+      default='') | bool"
+
+- name: "linux_helper | Include netconsole tasks"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/netconsole/main.yml"
+  when:
+    - "lookup('ansible.builtin.vars', 'linux_helper_netconsole_settings',
+      default='') not in ['', [], '[]', None]"
+    - "hostvars[inventory_hostname]['linux_helper'] is defined"
+    - "hostvars[inventory_hostname]['linux_helper'] not in ['', [], '[]', None]"
     - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_netconsole']) is
-       defined"
-    - "hostvars[inventory_hostname]['linux_helper'] |
-       community.general.json_query(vars['linux_helper_set_netconsole']) ==
-       'true'"
+       community.general.json_query(lookup('ansible.builtin.vars',
+       'linux_helper_set_netconsole', default='')) == 'true'"
   vars:
     linux_helper_set_netconsole:
       "[].netconsole[] | map(&set_netconsole || 'false', @) | [0]"
@@ -84,5 +86,5 @@
   ansible.builtin.include_tasks:
     file: "deploy_krb5.yml"
   when:
-    - "vars['linux_helper_krb5_settings'] is defined"
-    - "vars['linux_helper_krb5_settings'] != []"
+    - "lookup('ansible.builtin.vars', 'linux_helper_krb5_settings',
+      default='') not in ['', [], '[]', None]"

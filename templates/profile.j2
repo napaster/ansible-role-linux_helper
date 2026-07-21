@@ -2,4 +2,4 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{{ vars['linux_helper_profile_settings'] }}
+{{ lookup('ansible.builtin.vars', 'linux_helper_profile_settings') }}

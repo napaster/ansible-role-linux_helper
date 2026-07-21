@@ -2,13 +2,22 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for n in vars['linux_helper_netconsole_settings'] %}
-{% if n['netconsole'] is defined and n['netconsole'] != '' %}
+{% for n in lookup('ansible.builtin.vars',
+  'linux_helper_netconsole_settings') %}
+{% if n['netconsole'] is defined and n['netconsole']
+  not in ['', [], '[]', None] %}
 {% for nn in n['netconsole'] %}
-{% if (nn['remote_ipaddr'] is defined and nn['remote_ipaddr'] |
-  ansible.utils.ipaddr('host')) and (nn['remote_port'] is defined and
-  nn['remote_port'] != '') %}
+
+
+{% if (nn['remote_ipaddr'] is defined and nn['remote_ipaddr']
+  not in ['', [], '[]', None]) and ((nn['remote_ipaddr'] |
+  ansible.utils.ipaddr('host')) is ansible.utils.ip()) %}
+
+
+{% if nn['remote_port'] is defined and nn['remote_port']
+  not in ['', [], '[]', None] %}
 {{ 'NETCONSOLE_OPTS=' ~ nn['remote_port'] ~ '@' + nn['remote_ipaddr'] }}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endif %}

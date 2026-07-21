@@ -2,24 +2,31 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for n in vars['linux_helper_netconsole_settings'] %}
-{% if n['netconsole'] is defined and n['netconsole'] != '' %}
+{% for n in lookup('ansible.builtin.vars',
+  'linux_helper_netconsole_settings') %}
+{% if n['netconsole'] is defined and n['netconsole']
+  not in ['', [], '[]', None] %}
 {% for nn in n['netconsole'] %}
-{% if nn['local_port'] is defined and nn['local_port'] != '' %}
+{% if nn['local_port'] is defined and nn['local_port']
+  not in ['', [], '[]', None] %}
 {{ 'LOCALPORT=' ~ nn['local_port'] }}
 {% endif %}
-{% if nn['remote_ipaddr'] is defined and nn['remote_ipaddr'] |
-  ansible.utils.ipaddr('host') %}
+{% if (nn['remote_ipaddr'] is defined and nn['remote_ipaddr']
+  not in ['', [], '[]', None]) and ((nn['remote_ipaddr'] |
+  ansible.utils.ipaddr('host')) is ansible.utils.ip()) %}
 {{ 'SYSLOGADDR=' + nn['remote_ipaddr'] }}
 {% endif %}
-{% if nn['remote_port'] is defined and nn['remote_port'] != '' %}
+{% if nn['remote_port'] is defined and nn['remote_port']
+  not in ['', [], '[]', None] %}
 {{ 'SYSLOGPORT=' ~ nn['remote_port'] }}
 {% endif %}
-{% if nn['device'] is defined and nn['device'] != '' %}
+{% if nn['device'] is defined and nn['device']
+  not in ['', [], '[]', None] %}
 {{ 'DEV=' ~ nn['device'] }}
 {% endif %}
-{% if nn['remote_maddr'] is defined and nn['remote_maddr'] |
-  ansible.utils.hwaddr('linux') %}
+{% if (nn['remote_maddr'] is defined and nn['remote_maddr']
+  not in ['', [], '[]', None]) and ((nn['remote_maddr'] |
+  ansible.utils.hwaddr('linux')) is ansible.utils.mac()) %}
 {{ 'SYSLOGMACADDR=' + nn['remote_maddr'] }}
 {% endif %}
 {% endfor %}

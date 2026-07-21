@@ -1,0 +1,7 @@
+---
+- name: "linux_helper | Include netconsole packages tasks"
+  ansible.builtin.import_tasks:
+    file: "deploy.d/netconsole/packages.yml"
+- name: "linux_helper | Include netconsole deployment tasks"
+  ansible.builtin.import_tasks:
+    file: "deploy.d/netconsole/deploy.yml"

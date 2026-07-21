@@ -1,0 +1,39 @@
+---
+- name: "linux_helper | Create netconsole override systemd service directory"
+  ansible.builtin.file:
+    path: "{{ lookup('ansible.builtin.vars',
+      'linux_helper_netconsole_systemd_dir') }}"
+    state: "directory"
+    group: "root"
+    owner: "root"
+    mode: "0755"
+    recurse: "no"
+# This task restart netconsole service on failure, such as error in MAC
+# resolution on physdev setup (via NetworkManager-dispatcher, for example)
+- name: "linux_helper | Deploy netconsole service configuration"
+  ansible.builtin.template:
+    src: "netconsole_service.j2"
+    dest: "{{ lookup('ansible.builtin.vars',
+      'linux_helper_netconsole_systemd_dir') + '/netconsole.conf' }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify:
+    - "Daemon reload"
+    - "Restart netconsole"
+- name: "linux_helper | Deploy netconsole configuration"
+  ansible.builtin.template:
+    src: "{{ 'netconsole_' +
+      hostvars[inventory_hostname]['ansible_facts']['os_family'] + '.j2' }}"
+    dest: "{{ hostvars[inventory_hostname]['linux_helper_netconsole_dest'] +
+      '/netconsole' }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+    - "Restart netconsole"
+- name: "linux_helper | Enable netconsole service"
+  ansible.builtin.systemd:
+    name: "netconsole"
+    enabled: "yes"

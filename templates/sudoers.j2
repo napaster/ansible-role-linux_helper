@@ -2,6 +2,6 @@
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for s in vars['linux_helper_sudoers_settings'] %}
+{% for s in lookup('ansible.builtin.vars', 'linux_helper_sudoers_settings') %}
 {{ s }}
 {% endfor %}

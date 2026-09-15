@@ -81,7 +81,8 @@ linux_helper:
     sudoers:
       - 'root ALL=(ALL) ALL'
       - '%wheel ALL=(ALL) NOPASSWD: ALL'
-# netconsole deployment with systemd service
+# netconsole deployment with systemd service. On Archlinux 'netconsole' comes
+# from the AUR, so it must be built and reachable by pacman beforehand
     netconsole:
       - set_netconsole: 'true'
         netconsole:
